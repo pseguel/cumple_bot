@@ -14,9 +14,6 @@ from email.header import Header
 
 TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = 7540004772702084
-COL_NAME = 3506165565941636
-COL_DAY = 691415798835076
-COL_MONTH = 5195015426205572
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 
@@ -47,6 +44,7 @@ def sendMail(receivers, subject, text):
        print "Successfully sent email"
     except SMTPException:
        print "Error: unable to send email"
+
 
 def cell_by_column_name(row, column_name):
     column_id = column_map[column_ame]
@@ -101,14 +99,19 @@ def subject_mail(nombres):
     subject += "{0}!!!".format(n)
     return subject
 
+
 ss = smartsheet.Smartsheet(TOKEN)
 ss.errors_as_exceptions(True)
 
 sheet = ss.Sheets.get_sheet(SHEET_ID)
 
-
 for column in sheet.columns:
     column_map[column.title] = column.id
+
+COL_NAME = column_map['Nombre']
+COL_DAY = column_map['Dia']
+COL_MONTH = column_map['Mes']
+
 
 #for i in range(1,366):
 names = []
