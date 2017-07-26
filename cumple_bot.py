@@ -19,6 +19,7 @@ locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 
 column_map = {}
 
+
 def sendMail(receivers, subject, text):
     sender = '"Oficina Chile" <noreply@cisco.com>'
     host = 'mail.cisco.com'
@@ -41,9 +42,9 @@ def sendMail(receivers, subject, text):
     try:
        smtpObj = smtplib.SMTP(host, 25)
        smtpObj.sendmail(sender, receivers, msgRoot.as_string())
-       print "Successfully sent email"
+       print("Successfully sent email")
     except SMTPException:
-       print "Error: unable to send email"
+       print("Error: unable to send email")
 
 
 def cell_by_column_name(row, column_name):
@@ -100,7 +101,7 @@ def subject_mail(nombres):
     return subject
 
 
-ss = smartsheet.Smartsheet(TOKEN)
+ss = smartsheet.Smartsheet()
 ss.errors_as_exceptions(True)
 
 sheet = ss.Sheets.get_sheet(SHEET_ID)
@@ -124,12 +125,8 @@ for row in sheet.rows:
     if name != '':
         names.append(name)
 
-print names
-
 if len(names)>0:
     subject = subject_mail(names)
-    print subject
     texto = texto_mail(names, d)
-    print texto
     sendMail(['pseguel@cisco.com'], subject, texto) 
 
