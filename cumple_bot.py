@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import smartsheet
 import smtplib
 import time
@@ -13,7 +14,8 @@ from email.header import Header
 
 
 TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
-SHEET_ID = 7540004772702084
+SHEET_ID = int(os.environ['SHEET_ID'])
+# sheet_id = 7540004772702084
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 
@@ -129,4 +131,3 @@ if len(names)>0:
     subject = subject_mail(names)
     texto = texto_mail(names, d)
     sendMail(['pseguel@cisco.com'], subject, texto) 
-
