@@ -147,14 +147,10 @@ def image_text(src_image, text, url_img_list):
     font = ImageFont.truetype("CALIBRII.TTF", font_size)
 
     for url_face in url_img_list:
-        print "*******"
-        print url_face
         response = requests.get(url_face)
         img_faces.append(Image.open(StringIO(response.content)))
 
     lines = textwrap.wrap(text, width=line_width)#, replace_whitespace=False)
-    print text
-    print lines
     line_height = font_size*2
     x = 100
     y = 400
@@ -211,9 +207,6 @@ for row in sheet.rows:
 if len(names)>0:
     subject = subject_mail(names)
     texto = texto_mail(names, d)
-    print "after eval"
-    print names
-    print people_url_img
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
     sendMail(correos, subject, texto, OUT_IMAGE)
 
