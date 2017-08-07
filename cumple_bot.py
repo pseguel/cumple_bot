@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
+import os 
 import smartsheet
 import requests
 import smtplib
@@ -134,6 +134,7 @@ def image_text(src_image, text, url_img_list):
     faces_y_offset = 700
     faces_x_step = 35
     faces_x_size = 100
+    cisco_logo = 'media/Cisco_Logo_RGB_Screen_2color.png'
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("CALIBRII.TTF", font_size)
 
@@ -157,6 +158,11 @@ def image_text(src_image, text, url_img_list):
         offset = (faces_x_offset, faces_y_offset)
         faces_x_offset += faces_x_size + faces_x_step
         im.paste(resize_image(face, faces_x_size), offset)
+
+    logo_offset = (im.size[0]/2-50, 975)
+    logo = Image.open(cisco_logo)
+    logo = resize_image(logo, 100)
+    im.paste(logo, logo_offset, logo)
     im.save('cumple_img.png')
 
 
