@@ -93,6 +93,7 @@ def eval_row(source_row, date =None):
 
 
 def texto_mail(nombres, fecha):
+    line_width = 40
     d = fecha.day
     m = fecha.strftime('%B')
     w = fecha.strftime('%A')
@@ -105,8 +106,12 @@ def texto_mail(nombres, fecha):
         n = ", ".join(nombres[:-1]).encode('utf-8') + " y "+nombres[-1].encode('utf-8')
         v = "encuentran"
         plural = 's'
-    texto = "Team,\nLes contamos que hoy {0} {1} de {2} se {3} de cumpleaños {4}.\n".format(w, d, m, v, n)
-    texto+= "¡Le{0} deseamos muchísimas felicidades!".format(plural)
+    texto = "Team,\n \n"
+    texto_largo = "Les contamos que hoy {0} {1} de {2} se {3} de cumpleaños {4}.\n".format(w, d, m, v, n)
+    lines = textwrap.wrap(texto_largo, line_width)
+    texto+= '\n'.join(lines)
+    texto+= "\n \n¡Le{0} deseamos muchísimas felicidades!".format(plural)
+    print texto
 
     html_text = '<html><head><meta charset="utf-8"></head><body><p>Team,</p>'
     html_text+= '<p>les contamos que hoy {0} {1} de {2} se {3} de cumpleaños '.format(w,d,m,v)
@@ -134,8 +139,8 @@ def resize_image(img, basewidth):
 
 
 def image_text(src_image, text, url_img_list):
-    font_size = 32
-    line_width = 48
+    font_size = 36
+    line_width = 38
     im = Image.open(src_image)
     img_faces = []
     faces_x_offset = 300
@@ -150,13 +155,10 @@ def image_text(src_image, text, url_img_list):
         response = requests.get(url_face)
         img_faces.append(Image.open(StringIO(response.content)))
 
-    lines = textwrap.wrap(text, width=line_width)#, replace_whitespace=False)
-    line_height = font_size*2
     x = 100
     y = 400
-    for line in lines:
-        draw.text((x,y), unicode(line, 'utf-8'), font=font, fill=font_color)
-        y += font_size*1.5
+    draw.multiline_text((x,y), unicode(text, 'utf-8'), font=font,
+                        fill=font_color, spacing=6)
     n_face = 0
     for face in img_faces:
         offset = (faces_x_offset, faces_y_offset)
@@ -191,11 +193,11 @@ COL_IMG = column_map['Columna5'] #cambiar en smartsheet
 names = []
 people_url_img = []
 #d = datetime.datetime.strptime('2017 {0}'.format(i), '%Y %j').date()
-d = datetime.date(2017, 8, 9)
+d = datetime.date(2017, 6, 10)
 #d = datetime.date.today()
 
-correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
-#correos = ['pseguel@cisco.com', 'fraparra@cisco.com']
+#correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
+correos = ['pseguel@cisco.com']
 #correos = ['oficina_chile@cisco.com']
 
 for row in sheet.rows:
@@ -208,5 +210,5 @@ if len(names)>0:
     subject = subject_mail(names)
     texto = texto_mail(names, d)
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
-    sendMail(correos, subject, texto, OUT_IMAGE)
+    #sendMail(correos, subject, texto, OUT_IMAGE)
 
