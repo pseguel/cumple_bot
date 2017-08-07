@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os 
+import os
 import smartsheet
 import requests
 import smtplib
@@ -24,6 +24,7 @@ TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = int(os.environ['SHEET_ID'])
 # sheet_id = 7540004772702084
 SRC_IMAGE = 'media/cumple_background.png'
+OUT_IMAGE = 'cumple_img.png'
 font_color = (65,105,225) # royal blue
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -31,7 +32,7 @@ locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 column_map = {}
 
 
-def sendMail(receivers, subject, text):
+def sendMail(receivers, subject, text, image_name=None):
     sender = '"Oficina Chile" <noreply@cisco.com>'
     host = 'mail.cisco.com'
     marker = "UNIQUEREPORTMARKER"
@@ -50,12 +51,19 @@ def sendMail(receivers, subject, text):
     msgText = MIMEText(text['html'], 'html')
     msgAlternative.attach(msgText)
 
+    img = open(image_name,'rb').read()
+    msgImg = MIMEImage(img, 'png')
+    msgImg.add_header('Content-ID', '<image1>')
+    msgImg.add_header('Content-Disposition', 'inline', filename=image_name)
+
+    msgRoot.attach(msgImg)
+
     try:
        smtpObj = smtplib.SMTP(host, 25)
        smtpObj.sendmail(sender, receivers, msgRoot.as_string())
        print("Successfully sent email")
     except SMTPException:
-       print("Error: unable to send email")
+       print("Error: unable to send  email")
 
 
 def cell_by_column_name(row, column_name):
@@ -97,20 +105,20 @@ def texto_mail(nombres, fecha):
         n = ", ".join(nombres[:-1]).encode('utf-8') + " y "+nombres[-1].encode('utf-8')
         v = "encuentran"
         plural = 's'
-    texto = "Team,\n\nLes contamos que hoy {0} {1} de {2} se {3} de cumpleaños {4}.\n".format(w, d, m, v, n)
-    texto+= "\n¡Le{0} deseamos muchísimas felicidades!".format(plural)
+    texto = "Team,\nLes contamos que hoy {0} {1} de {2} se {3} de cumpleaños {4}.\n".format(w, d, m, v, n)
+    texto+= "¡Le{0} deseamos muchísimas felicidades!".format(plural)
 
     html_text = '<html><head><meta charset="utf-8"></head><body><p>Team,</p>'
     html_text+= '<p>les contamos que hoy {0} {1} de {2} se {3} de cumpleaños '.format(w,d,m,v)
     html_text+= '<b>{0}.</b></p>'.format(n)
-    html_text+= '<p><imgi src="cid:image1"></p>'
     html_text+= '<p>¡Le{0} deseamos muchísimas felicidades!</p>'.format(plural)
+    html_text+= '<p><img src="cid:image1"></p>'
     html_text+= '</body></html>'
     return {'plain':texto,  'html':html_text}
 
 
 def subject_mail(nombres):
-    subject = '¡¡¡Feliz Cumpleaños '
+    subject = '[TEST] ¡¡¡Feliz Cumpleaños '
     if len(nombres) == 1:
         n = nombres[0].encode('utf-8')
     else:
@@ -127,7 +135,7 @@ def resize_image(img, basewidth):
 
 def image_text(src_image, text, url_img_list):
     font_size = 32
-    line_width = 40
+    line_width = 48
     im = Image.open(src_image)
     img_faces = []
     faces_x_offset = 300
@@ -163,7 +171,8 @@ def image_text(src_image, text, url_img_list):
     logo = Image.open(cisco_logo)
     logo = resize_image(logo, 100)
     im.paste(logo, logo_offset, logo)
-    im.save('cumple_img.png')
+    im = resize_image(im, 400)
+    im.save(OUT_IMAGE)
 
 
 def get_url_img_person(sheet):
@@ -186,11 +195,11 @@ COL_IMG = column_map['Columna5'] #cambiar en smartsheet
 names = []
 people_url_img = []
 #d = datetime.datetime.strptime('2017 {0}'.format(i), '%Y %j').date()
-d = datetime.date(2017, 6, 10)
+d = datetime.date(2017, 8, 9)
 #d = datetime.date.today()
 
 correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
-correos = ['pseguel@cisco.com']
+#correos = ['pseguel@cisco.com', 'fraparra@cisco.com']
 #correos = ['oficina_chile@cisco.com']
 
 for row in sheet.rows:
@@ -206,5 +215,5 @@ if len(names)>0:
     print names
     print people_url_img
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
-    #sendMail(correos, subject, texto)
+    sendMail(correos, subject, texto, OUT_IMAGE)
 
