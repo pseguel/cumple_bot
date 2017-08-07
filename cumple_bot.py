@@ -9,6 +9,7 @@ import time
 import datetime
 import locale
 import textwrap
+import ciscosparkapi
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -111,7 +112,6 @@ def texto_mail(nombres, fecha):
     lines = textwrap.wrap(texto_largo, line_width)
     texto+= '\n'.join(lines)
     texto+= "\n \n¡Le{0} deseamos muchísimas felicidades!".format(plural)
-    print texto
 
     html_text = '<html><head><meta charset="utf-8"></head><body><p>Team,</p>'
     html_text+= '<p>les contamos que hoy {0} {1} de {2} se {3} de cumpleaños '.format(w,d,m,v)
@@ -196,8 +196,8 @@ people_url_img = []
 d = datetime.date(2017, 6, 10)
 #d = datetime.date.today()
 
-#correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
-correos = ['pseguel@cisco.com']
+correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
+#correos = ['pseguel@cisco.com']
 #correos = ['oficina_chile@cisco.com']
 
 for row in sheet.rows:
@@ -210,5 +210,5 @@ if len(names)>0:
     subject = subject_mail(names)
     texto = texto_mail(names, d)
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
-    #sendMail(correos, subject, texto, OUT_IMAGE)
+    sendMail(correos, subject, texto, OUT_IMAGE)
 
