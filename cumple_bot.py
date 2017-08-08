@@ -9,7 +9,6 @@ import time
 import datetime
 import locale
 import textwrap
-import ciscosparkapi
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -20,12 +19,15 @@ import PIL
 from PIL import Image, ImageFilter, ImageFont, ImageDraw
 from StringIO import StringIO
 
+from ciscosparkapi import CiscoSparkAPI
+
 
 TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = int(os.environ['SHEET_ID'])
 # sheet_id = 7540004772702084
 SRC_IMAGE = 'media/cumple_background.png'
 OUT_IMAGE = 'cumple_img.png'
+ROOM_ID = os.environ['ROOM_ID']
 font_color = (65,105,225) # royal blue
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -93,7 +95,7 @@ def eval_row(source_row, date =None):
     return name, url
 
 
-def texto_mail(nombres, fecha):
+def texto_mail(nombres, fecha): 
     line_width = 40
     d = fecha.day
     m = fecha.strftime('%B')
@@ -181,6 +183,8 @@ ss.errors_as_exceptions(True)
 
 sheet = ss.Sheets.get_sheet(SHEET_ID)
 
+api = CiscoSparkAPI()
+
 for column in sheet.columns:
     column_map[column.title] = column.id
 
@@ -210,5 +214,6 @@ if len(names)>0:
     subject = subject_mail(names)
     texto = texto_mail(names, d)
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
-    sendMail(correos, subject, texto, OUT_IMAGE)
+    api.messages.create(roomId=ROOM_ID, text=texto['plain'], files=[OUT_IMAGE]) 
+    #sendMail(correos, subject, texto, OUT_IMAGE)
 
