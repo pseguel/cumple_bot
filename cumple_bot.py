@@ -28,7 +28,7 @@ SHEET_ID = int(os.environ['SHEET_ID'])
 SRC_IMAGE = 'media/images/cumple_background.png'
 OUT_IMAGE = 'cumple_img.png'
 ROOM_ID = os.environ['ROOM_ID']
-MAIL_DEST = os,environ['MAIL_DEST']
+MAIL_DEST = os.environ['MAIL_DEST']
 font_color = (65,105,225) # royal blue
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
