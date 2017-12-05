@@ -25,9 +25,10 @@ from ciscosparkapi import CiscoSparkAPI
 TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = int(os.environ['SHEET_ID'])
 # sheet_id = 7540004772702084
-SRC_IMAGE = 'media/cumple_background.png'
+SRC_IMAGE = 'media/images/cumple_background.png'
 OUT_IMAGE = 'cumple_img.png'
 ROOM_ID = os.environ['ROOM_ID']
+MAIL_DEST = os,environ['MAIL_DEST']
 font_color = (65,105,225) # royal blue
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -125,7 +126,7 @@ def texto_mail(nombres, fecha):
 
 
 def subject_mail(nombres):
-    subject = '[TEST] ¡¡¡Feliz Cumpleaños '
+    subject = '¡¡¡Feliz Cumpleaños '
     if len(nombres) == 1:
         n = nombres[0].encode('utf-8')
     else:
@@ -149,9 +150,9 @@ def image_text(src_image, text, url_img_list):
     faces_y_offset = 700
     faces_x_step = 35
     faces_x_size = 100
-    cisco_logo = 'media/Cisco_Logo_RGB_Screen_2color.png'
+    cisco_logo = 'media/images/Cisco_Logo_RGB_Screen_2color.png'
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("CALIBRII.TTF", font_size)
+    font = ImageFont.truetype("media/fonts/CALIBRII.TTF", font_size)
 
     for url_face in url_img_list:
         response = requests.get(url_face)
@@ -197,12 +198,13 @@ COL_IMG = column_map['Columna5'] #cambiar en smartsheet
 names = []
 people_url_img = []
 #d = datetime.datetime.strptime('2017 {0}'.format(i), '%Y %j').date()
-d = datetime.date(2017, 6, 10)
-#d = datetime.date.today()
+#d = datetime.date(2017, 8, 28)
+d = datetime.date.today()
 
-correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
-#correos = ['pseguel@cisco.com']
+#correos = ['pseguel@cisco.com', 'lfaundez@cisco.com', 'lwannerp@cisco.com']
 #correos = ['oficina_chile@cisco.com']
+#correos = ['pseguel@cisco.com']
+correos = [MAIL_DEST]
 
 for row in sheet.rows:
     name, url = eval_row(row, d)
@@ -214,6 +216,7 @@ if len(names)>0:
     subject = subject_mail(names)
     texto = texto_mail(names, d)
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
-    api.messages.create(roomId=ROOM_ID, text=texto['plain'], files=[OUT_IMAGE]) 
-    #sendMail(correos, subject, texto, OUT_IMAGE)
-
+    #api.messages.create(roomId=ROOM_ID, text=texto['plain'], files=[OUT_IMAGE]) 
+    sendMail(correos, subject, texto, OUT_IMAGE)
+else:
+    print("No hay cumpleaños hoy")
