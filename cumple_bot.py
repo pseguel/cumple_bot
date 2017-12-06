@@ -26,7 +26,7 @@ TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = int(os.environ['SHEET_ID'])
 # sheet_id = 7540004772702084
 BOT_PATH = os.environ['BOT_PATH']
-SRC_IMAGE = 'media/images/cumple_background.png'
+SRC_IMAGE = BOT_PATH+'media/images/cumple_background.png'
 OUT_IMAGE = 'cumple_img.png'
 ROOM_ID = os.environ['ROOM_ID']
 MAIL_DEST = os.environ['MAIL_DEST']
@@ -151,9 +151,9 @@ def image_text(src_image, text, url_img_list):
     faces_y_offset = 700
     faces_x_step = 35
     faces_x_size = 100
-    cisco_logo = 'media/images/Cisco_Logo_RGB_Screen_2color.png'
+    cisco_logo = BOT_PATH+'media/images/Cisco_Logo_RGB_Screen_2color.png'
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("media/fonts/CALIBRII.TTF", font_size)
+    font = ImageFont.truetype(BOT_PATH+"media/fonts/CALIBRII.TTF", font_size)
 
     for url_face in url_img_list:
         response = requests.get(url_face)
