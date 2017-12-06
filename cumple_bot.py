@@ -25,6 +25,7 @@ from ciscosparkapi import CiscoSparkAPI
 TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = int(os.environ['SHEET_ID'])
 # sheet_id = 7540004772702084
+BOT_PATH = os.environ['BOT_PATH']
 SRC_IMAGE = 'media/images/cumple_background.png'
 OUT_IMAGE = 'cumple_img.png'
 ROOM_ID = os.environ['ROOM_ID']
