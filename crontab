@@ -1,2 +1,2 @@
-* * * * * python /cumple_bot.py >> /var/log/cron/cron.log 2>&1
+5 8 * * * python /cumple_bot.py >> /var/log/cron/cron.log 2>&1
 # empty line
