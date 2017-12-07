@@ -57,7 +57,7 @@ else:
 column_map = {}
 
 
-def sendMail(receivers, subject, text, image_name=None, content_id=None):
+def sendMail(receivers, subject, text, image_na me=None, content_id=None):
     if content_id == None:
         content_id = 'image1'
 
@@ -254,4 +254,4 @@ if len(names)>0:
     #api.messages.create(roomId=ROOM_ID, text=texto['plain'], files=[OUT_IMAGE]) 
     sendMail(correos, subject, texto, OUT_IMAGE, image_id)
 else:
-    print("No hay cumpleaños hoy")
+    print("[{0}] No hay cumpleaños hoy".format(datetime.datetime.now().isoformat()))
