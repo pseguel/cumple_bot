@@ -22,10 +22,20 @@ from StringIO import StringIO
 
 from ciscosparkapi import CiscoSparkAPI
 
+if 'HTTP_PROXY' in os.environ:
+    HTTP_PROXY = os.environ['HTTP_PROXY']
+else:
+    HTTP_PROXY = None
+
+if 'HTTPS_PROXY' in os.environ:
+    HTTPS_PROXY = os.environ['HTTPS_PROXY']
+else:
+    HTTPS_PROXY = None
+
 
 TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
 SHEET_ID = int(os.environ['SHEET_ID'])
-# sheet_id = 7540004772702084
+
 BOT_PATH = os.environ['BOT_PATH']
 SRC_IMAGE = BOT_PATH+'media/images/cumple_background.png'
 OUT_IMAGE = str(uuid.uuid4())+'.png'
@@ -34,6 +44,15 @@ MAIL_DEST = os.environ['MAIL_DEST']
 font_color = (65,105,225) # royal blue
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+
+if HTTP_PROXY == None or HTTPS_PROXY == None:
+    proxies=None
+else:
+    proxies = {
+        'http':HTTP_PROXY,
+        'https':HTTPS_PROXY
+    }
+
 
 column_map = {}
 
@@ -187,7 +206,7 @@ def image_text(src_image, text, url_img_list):
 def get_url_img_person(sheet):
    pass
 
-ss = smartsheet.Smartsheet()
+ss = smartsheet.Smartsheet(proxies=proxies)
 ss.errors_as_exceptions(True)
 
 sheet = ss.Sheets.get_sheet(SHEET_ID)
