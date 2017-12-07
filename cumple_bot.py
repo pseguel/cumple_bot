@@ -89,9 +89,10 @@ def sendMail(receivers, subject, text, image_name=None, content_id=None):
     try:
        smtpObj = smtplib.SMTP(host, 25)
        smtpObj.sendmail(sender, receivers, msgRoot.as_string())
-       print("Successfully sent email")
+       ts = datetime.datetime.now().isoformat()
+       print("[{0}] Successfully sent email".format(ts))
     except SMTPException:
-       print("Error: unable to send  email")
+       print("[{0}]Error: unable to send  email".format(ts))
 
 
 def cell_by_column_name(row, column_name):
@@ -223,6 +224,7 @@ COL_IMG = column_map['Columna5'] #cambiar en smartsheet
 
 names = []
 people_url_img = []
+
 # TEST CASES
 #for i in range(1,366):
 #d = datetime.datetime.strptime('2017 {0}'.format(i), '%Y %j').date()
