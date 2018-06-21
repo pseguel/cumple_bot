@@ -15,6 +15,8 @@ COPY crontab /tmp/crontab
 RUN mkdir -p /var/log/cron && touch /var/log/cron/cron.log
 COPY /create-cron.sh /
 RUN chmod +x /create-cron.sh
-ENTRYPOINT ["/create-cron.sh"]
+# Comentados porque depende de las ENV
+# es decir, debe ejecutarse al instanciar el container
+#RUN /create-cron.sh
 #RUN crontab /etc/cron.d/cumple-cron
-#CMD ["cron", "-f"] 
+CMD /create-cron.sh && crontab /etc/cron.d/cumple-cron && cron -f 
