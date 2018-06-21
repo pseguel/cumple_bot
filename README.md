@@ -29,6 +29,12 @@ I recommend start the container as follows:
 docker run -d --env-file env.list pseguel/cumple_bot
 ```
 
+In the case of a server, where the container should start
+after reboots, do the following:
+
+```
+docker run -dit --restart unless-stopped --env-file env.list pseguel/cumple_bot
+```
 
 ## TODO
 * Use virtualenv
