@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
+import os 
 import smartsheet
 import requests
 import smtplib
@@ -32,12 +32,12 @@ if 'HTTPS_PROXY' in os.environ:
 else:
     HTTPS_PROXY = None
 
-
-TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
+#TOKEN = '4dlyvpcbi6lgm531ayg4zvma1t'
+TOKEN = str(os.environ['SMARTSHEET_ACCESS_TOKEN'])
 SHEET_ID = int(os.environ['SHEET_ID'])
 
 BOT_PATH = os.environ['BOT_PATH']
-SRC_IMAGE = BOT_PATH+'media/images/cumple_background.png'
+SRC_IMAGE = '/media/images/cumple_background.png'
 OUT_IMAGE = str(uuid.uuid4())+'.png'
 ROOM_ID = os.environ['ROOM_ID']
 MAIL_DEST = os.environ['MAIL_DEST']
@@ -178,9 +178,9 @@ def image_text(src_image, text, url_img_list):
     faces_y_offset = 700
     faces_x_step = 35
     faces_x_size = 100
-    cisco_logo = BOT_PATH+'media/images/Cisco_Logo_RGB_Screen_2color.png'
+    cisco_logo = '/media/images/Cisco_Logo_RGB_Screen_2color.png'
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype(BOT_PATH+"media/fonts/CALIBRII.TTF", font_size)
+    font = ImageFont.truetype("/media/fonts/CALIBRII.TTF", font_size)
 
     for url_face in url_img_list:
         response = requests.get(url_face)
@@ -230,7 +230,7 @@ people_url_img = []
 #d = datetime.datetime.strptime('2017 {0}'.format(i), '%Y %j').date()
 #d = datetime.date(2017, 3, 30)
 #d = datetime.date(2017, 5, 30)
-#d = datetime.date(2017, 8, 28)
+#d = datetime.date(2018, 6, 9)
 # END TEST CASES
 d = datetime.date.today()
 
@@ -249,7 +249,6 @@ if len(names)>0:
     image_id = str(uuid.uuid4())
     subject = subject_mail(names)
     texto = texto_mail(names, d, image_id)
-
     image_text(SRC_IMAGE, texto['plain'], people_url_img)
     #api.messages.create(roomId=ROOM_ID, text=texto['plain'], files=[OUT_IMAGE]) 
     sendMail(correos, subject, texto, OUT_IMAGE, image_id)
